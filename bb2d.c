@@ -93,12 +93,12 @@ int BB2D_Read(const unsigned short addr, const unsigned short size) {
 }
 
 char BB2D_GetChar(const unsigned short addr) {
-  if (addr > 360) return error(0, "Out of range.");
+  if (addr > 359) return error(0, "Out of range.");
   return (char)memmap[addr];
 }
 
 unsigned char BB2D_GetUChar(const unsigned short addr) {
-  if (addr > 360) return error(0, "Out of range.");
+  if (addr > 359) return error(0, "Out of range.");
   return memmap[addr];
 }
 
@@ -140,4 +140,194 @@ float BB2D_GetFloat(const unsigned short addr) {
 double BB2D_GetDouble(const unsigned short addr) {
   if (addr > 352) return error(0, "Out of range.");
   return byte2double(memmap, addr);
+}
+
+int BB2D_WriteChar(const unsigned short addr, const char src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 359) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(char);
+  report[4] = (byte)src;
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteUChar(const unsigned short addr, const unsigned char src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 359) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(unsigned char);
+  report[4] = src;
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteShort(const unsigned short addr, const short src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 358) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(short);
+  short2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteUShort(const unsigned short addr, const unsigned short src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 358) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(unsigned short);
+  ushort2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteInt(const unsigned short addr, const int src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 356) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(int);
+  int2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteUInt(const unsigned short addr, const unsigned int src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 356) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(unsigned int);
+  uint2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteLong(const unsigned short addr, const long src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 352) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(long);
+  long2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteULong(const unsigned short addr, const unsigned long src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 352) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(unsigned long);
+  ulong2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteFloat(const unsigned short addr, const float src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 356) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(float);
+  float2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
+}
+
+int BB2D_WriteDouble(const unsigned short addr, const double src) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+
+  if (addr > 352) return error(0, "Out of range.");
+
+  report[0] = (byte)CMD_WRITE;
+  ushort2byte(report, 1, addr);
+  report[3] = (byte)sizeof(double);
+  double2byte(report, 4, src);
+
+  int res, act;
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+  res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+  if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+  return EXIT_SUCCESS;
 }

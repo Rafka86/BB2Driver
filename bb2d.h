@@ -29,17 +29,15 @@ unsigned long   BB2D_GetULong (const unsigned short addr);
          float  BB2D_GetFloat (const unsigned short addr);
          double BB2D_GetDouble(const unsigned short addr); 
 
-/*void
-void BB2D_SetChar  (const unsigned short addr,          char   src);
-void BB2D_SetUChar (const unsigned short addr, unsigned char   src);
-void BB2D_SetShort (const unsigned short addr,          short  src);
-void BB2D_SetUShort(const unsigned short addr, unsigned short  src);
-void BB2D_SetInt   (const unsigned short addr,          int    src);
-void BB2D_SetUInt  (const unsigned short addr, unsigned int    src);
-void BB2D_SetLong  (const unsigned short addr,          long   src);
-void BB2D_SetULong (const unsigned short addr, unsigned long   src);
-void BB2D_SetFloat (const unsigned short addr,          float  src);
-void BB2D_SetDouble(const unsigned short addr,          double src); 
-*/
+int BB2D_WriteChar  (const unsigned short addr, const          char   src);
+int BB2D_WriteUChar (const unsigned short addr, const unsigned char   src);
+int BB2D_WriteShort (const unsigned short addr, const          short  src);
+int BB2D_WriteUShort(const unsigned short addr, const unsigned short  src);
+int BB2D_WriteInt   (const unsigned short addr, const          int    src);
+int BB2D_WriteUInt  (const unsigned short addr, const unsigned int    src);
+int BB2D_WriteLong  (const unsigned short addr, const          long   src);
+int BB2D_WriteULong (const unsigned short addr, const unsigned long   src);
+int BB2D_WriteFloat (const unsigned short addr, const          float  src);
+int BB2D_WriteDouble(const unsigned short addr, const          double src);
 
 #endif //_BB2D_H_
