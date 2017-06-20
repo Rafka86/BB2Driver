@@ -10,6 +10,7 @@ typedef struct libusb_device        libusb_device;
 typedef struct libusb_device_handle libusb_device_handle;
 
 byte report[REPORT_SIZE];
+byte memmap[MEMORY_SIZE];
 
 libusb_context       *ctx = NULL;
 libusb_device_handle *dev_handle;
@@ -60,4 +61,83 @@ int BB2D_Disconnect() {
 
   fprintf(stderr, "Disconnect.\n");
   return EXIT_SUCCESS;
+}
+
+#define DATA_MAX 60 //byte
+int BB2D_Read(const unsigned short addr, const unsigned short size) {
+  if (ctx == NULL) return error(0, "Connection has not been established.");
+  
+  if (addr > 352 || addr + size > 360) return error(0, "Out of range.");
+
+  unsigned int a = addr;
+  unsigned int s = size;
+  int act, res, i;
+  while (s > 0) {
+    report[0] = (byte)CMD_READ;
+    ushort2byte(report, 1, a);
+    report[3] = (byte)(s > DATA_MAX ? DATA_MAX : s);
+
+    res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_OUT), report, REPORT_SIZE, &act, TIME_OUT);
+    if (res != 0 || act != REPORT_SIZE) return error(res, "Writing failed.");
+
+    res = libusb_interrupt_transfer(dev_handle, (BB2_EP | LIBUSB_ENDPOINT_IN), report, REPORT_SIZE, &act, TIME_OUT);
+    if (res != 0 || act != REPORT_SIZE) return error(res, "Reading failed.");
+
+    act = report[1];
+    for (i = 0; i < act; i++) memmap[a + i] = report[2 + i];
+    a += act;
+    s -= act;
+  }
+
+  return EXIT_SUCCESS;
+}
+
+char BB2D_GetChar(const unsigned short addr) {
+  if (addr > 360) return error(0, "Out of range.");
+  return (char)memmap[addr];
+}
+
+unsigned char BB2D_GetUChar(const unsigned short addr) {
+  if (addr > 360) return error(0, "Out of range.");
+  return memmap[addr];
+}
+
+short BB2D_GetShort(const unsigned short addr) {
+  if (addr > 358) return error(0, "Out of range.");
+  return byte2short(memmap, addr);
+}
+
+unsigned short BB2D_GetUShort(const unsigned short addr) {
+  if (addr > 358) return error(0, "Out of range.");
+  return byte2ushort(memmap, addr);
+}
+
+int BB2D_GetInt(const unsigned short addr){
+  if (addr > 356) return error(0, "Out of range.");
+  return byte2int(memmap, addr);
+}
+
+unsigned int BB2D_GetUInt(const unsigned short addr){
+  if (addr > 356) return error(0, "Out of range.");
+  return byte2uint(memmap, addr);
+}
+
+long BB2D_GetLong(const unsigned short addr) {
+  if (addr > 352) return error(0, "Out of range.");
+  return byte2long(memmap, addr);
+}
+
+unsigned long BB2D_GetULong(const unsigned short addr) {
+  if (addr > 352) return error(0, "Out of range.");
+  return byte2ulong(memmap, addr);
+}
+
+float BB2D_GetFloat(const unsigned short addr) {
+  if (addr > 356) return error(0, "Out of range.");
+  return byte2float(memmap, addr);
+}
+
+double BB2D_GetDouble(const unsigned short addr) {
+  if (addr > 352) return error(0, "Out of range.");
+  return byte2double(memmap, addr);
 }
