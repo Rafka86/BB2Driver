@@ -1,8 +1,8 @@
 # BB2Driver
-This is a beauto balancer 2 driver program running on mac os X or Linux.
+BB2DriverはmacOSやLinuxから，
+ヴィストン社製の倒立振子ロボットビュートバランサー2を
+USB制御するための機能を纏めたライブラリです．
 
-Memo
-
-on Mac os X
-
-$ sudo kextunload -b com.apple.driver.usb.IOUSBHostHIDDevice
+各種ドキュメントについては
+[Wiki](https://github.com/Rafka86/BB2Driver/wiki/)
+を参照してください．
